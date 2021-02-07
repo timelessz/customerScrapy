@@ -79,7 +79,6 @@ class CustomerscrapyDownloaderMiddleware:
             }
         }
         settings = get_project_settings()
-        print(settings.get('CHROME_OPTIONS_BINARY_LOCATION'))
         # 添加 crx 拓展
         # chrome_options.add_extension('d:\crx\AdBlock_v2.17.crx')
         chrome_options.add_experimental_option("prefs", prefs)
