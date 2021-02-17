@@ -88,4 +88,6 @@ ROBOTSTXT_OBEY = False
 # selenium 超时
 SELENIUM_TIMEOUT = 10
 # chrome打开选项
-CHROME_OPTIONS_BINARY_LOCATION = "C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe"
+CHROME_OPTIONS_BINARY_LOCATION = "D:\chromeDriver\chromedriver.exe"
+
+

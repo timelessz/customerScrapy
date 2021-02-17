@@ -4,11 +4,11 @@ import scrapy
 class MadeinchinaSpider(scrapy.Spider):
     name = 'madeinchina'
     allowed_domains = ['made-in-china.com']
-    start_urls = ['http://made-in-china.com/']
-    #
+    start_urls = ['https://made-in-china.com/']
+
     custom_settings = {
         'ITEM_PIPELINES': {
-            'customerScrapy.pipelines.madeInChinaPipeline': 300,
+            # 'customerScrapy.pipelines.madeInChinaPipeline': 300,
         },
         'DOWNLOADER_MIDDLEWARES': {
             'customerScrapy.middlewares.CustomerscrapyDownloaderMiddleware': 543,

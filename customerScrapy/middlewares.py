@@ -12,6 +12,7 @@ from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -75,7 +76,7 @@ class CustomerscrapyDownloaderMiddleware:
         prefs = {
             'profile.default_content_setting_values': {
                 'images': 2,  # 禁用图片的加载
-                'javascript': 2  # 禁用js，可能会导致通过js加载的互动数抓取失效
+                # 'javascript': 2  # 禁用js，可能会导致通过js加载的互动数抓取失效
             }
         }
         settings = get_project_settings()
@@ -83,7 +84,7 @@ class CustomerscrapyDownloaderMiddleware:
         # chrome_options.add_extension('d:\crx\AdBlock_v2.17.crx')
         chrome_options.add_experimental_option("prefs", prefs)
         self.browser = webdriver.Chrome(
-            executable_path=r"C:/Users/qiangbi/Downloads/chromedriver_win32 (1)/chromedriver.exe",
+            executable_path=settings.get('CHROME_OPTIONS_BINARY_LOCATION'),
             chrome_options=chrome_options)
         self.timeout = settings.get('SELENIUM_TIMEOUT')
         self.wait = WebDriverWait(self.browser, self.timeout)
@@ -108,14 +109,27 @@ class CustomerscrapyDownloaderMiddleware:
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
         try:
+            # if request.url == 'https://www.made-in-china.com/':
             self.browser.get(request.url)
             # self.wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="s-result-list sg-row"]')))
+            self.__login()
+            return None
             time.sleep(2)
             return HtmlResponse(url=request.url, body=self.browser.page_source, request=request, encoding='utf-8',
                                 status=200)
         except TimeoutException:
             return HtmlResponse(url=request.url, status=500, request=request)
         return None
+
+    def __login(self):
+        # 鼠标滑动到注册页面
+        ActionChains(self.browser).move_to_element(self.browser.find_element_by_link_text("Sign In")).perform()
+        # down_data_click = WebDriverWait(self.browser, 5).until(
+        #     EC.element_to_be_clickable((By.XPATH, "div/div[1]/div/div[3]/div/div[3]/div[1]/div[1]/div/a[1]"))
+        # )
+        time.sleep(2)
+        # down_data_click.click()
+        return
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
