@@ -1,12 +1,14 @@
 import time
+from urllib.parse import urlparse
 
-from scrapy import Selector
+from scrapy import Selector, selector
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote import switch_to
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -17,7 +19,7 @@ class CustomerscrapyDemo:
     # passed objects.
     url = 'https://www.made-in-china.com/'
     username = '834916321@qq.com'
-    password = ''
+    password = '201671zhuang'
 
     def __init__(self):
         chrome_options = Options()
@@ -33,9 +35,38 @@ class CustomerscrapyDemo:
         self.browser = webdriver.Chrome(executable_path='D:\chromeDriver\chromedriver.exe',
                                         options=chrome_options)
         self.wait = WebDriverWait(self.browser, 10)
-        self.process()
 
     def process(self):
+        self.browser.get('https://sinoder.en.made-in-china.com')
+        self.browser.maximize_window()
+        ActionChains(self.browser).move_to_element(
+            self.browser.find_element_by_xpath("//*[contains(@class,'sr-nav-main')]/li[last()]/a")).click().perform()
+        time.sleep(200)
+        return
+        html = self.browser.find_element_by_xpath("//*").get_attribute("outerHTML")
+        sel = Selector(text=html)
+        contact_divs = sel.xpath("//*[contains(@class,'contact-info')]/div[contains(@class,'info-item')]")
+        address, telephone, phone, contact, dept, position = '', '', '', '', '', ''
+        for div in contact_divs:
+            label = div.xpath("*[contains(@class,'info-label')]/text()").extract_first()
+            text = div.xpath("*[contains(@class,'info-fields')]/text()").extract_first()
+            if label == 'Address:':
+                address = text
+            elif label == 'Telephone:':
+                telephone = text
+            elif label == 'Mobile Phone:':
+                phone = text
+        contact_info_divs = sel.xpath(
+            "//*[contains(@class,'contact-customer')]/div[contains(@class,'contact-customer-info')]/div[contains(@class,'info-detail')]/div")
+        for div in contact_info_divs:
+            contact = div.xpath("*[contains(@class,'info-name')]/text()").extract_first()
+            dept = div.xpath("*[contains(@class,'info-item')]/text()").extract_first()
+            position = div.xpath("*[contains(@class,'info-item')]/text()").extract_first()
+        ActionChains(self.browser).move_to_element(
+            self.browser.find_element_by_xpath("//a[contains(@class,'link-web')]")).click().perform()
+        print(address, telephone, phone, contact, dept, position)
+        return
+
         try:
             self.browser.get(self.url)
             self.browser.maximize_window()

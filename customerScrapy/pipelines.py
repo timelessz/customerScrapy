@@ -9,5 +9,6 @@ from itemadapter import ItemAdapter
 
 
 class CustomerscrapyPipeline:
+
     def process_item(self, item, spider):
         return item

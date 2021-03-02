@@ -85,9 +85,18 @@ ROBOTSTXT_OBEY = False
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+LOG_ENABLED = False
+
+# 自动更新的爬虫数据库
+MYSQL_HOST = 'rdsfjnifbfjnifbo.mysql.rds.aliyuncs.com'
+MYSQL_DBNAME = 'madeinchina'
+MYSQL_USER = 'madeinchina'
+MYSQL_PASSWD = 'LiuRui123$%^'
+
 # selenium 超时
 SELENIUM_TIMEOUT = 10
 # chrome打开选项
 CHROME_OPTIONS_BINARY_LOCATION = "D:\chromeDriver\chromedriver.exe"
-
-
+# 登录 madeinchina 账号密码
+LOGIN_USERNAME = '834916321@qq.com'
+LOGIN_PASSWORD = '201671zhuang'
