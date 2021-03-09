@@ -62,6 +62,7 @@ class Customer(Base):
     fax = Column(String(50), server_default=text("''"))
     showroom = Column(String(200), server_default=text("''"))
     website = Column(String(200), server_default=text("''"))
+    website_title = Column(String(300), server_default=text("''"))
     type = Column(String(10), server_default=text("''"))
     created_at = Column(INTEGER(11))
     updated_at = Column(INTEGER(11))

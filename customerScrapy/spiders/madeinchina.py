@@ -1,11 +1,6 @@
 import time
-
 import scrapy
-from scrapy.utils.project import get_project_settings
-
 from customerScrapy.Model import Industry, Customer
-from customerScrapy.Tools.Login import Login
-from customerScrapy.Tools.parseCustomer import parseCustomer
 from customerScrapy.Tools.parseProductNextList import parseProductNextList
 from customerScrapy.dborm import getsession
 
@@ -53,15 +48,20 @@ class MadeinchinaSpider(scrapy.Spider):
         for cat_id in self.category_ids:
             industrys = self.DBSession.query(Industry).filter_by(cat_id=cat_id).all()
             for industry in industrys:
-                if industry.current_page_num and industry.current_page_num >= 20:
+                if industry.current_page_num and industry.current_page_num >= 10:
+                    continue
+                if industry.current_page_num and industry.current_page_num >= 10:
+                    continue
+                if industry.all_page_num and industry.all_page_num < 20:
                     continue
                 if industry.all_page_num and industry.current_page_num and industry.current_page_num >= industry.all_page_num:
                     continue
+                if industry.cus_list_link == '%s':
+                    continue
                 # 遍历 所有的行业分类
                 for com_info in parseProductNextList(industry, self.login_cookies).yield_company_url():
-                    print('//////////////////////////////')
-                    print(com_info)
-                    print('//////////////////////////////')
+                    if not com_info:
+                        continue
                     # 更新cookies
                     self.login_cookies = com_info['login_cookies']
                     # 首先判断是不是数据库中已经有了
@@ -73,6 +73,9 @@ class MadeinchinaSpider(scrapy.Spider):
         en_name = com_info['en_name']
         customer = self.DBSession.query(Customer).filter_by(en_name=en_name).first()
         if customer is None:
+            print('''''''''''''''''''''''''''''''''''''''''''''''''''''''')
+            print('addddddddddddddddddddddddddddddddddddddddddddddddddd')
+            print('''''''''''''''''''''''''''''''''''''''''''''''''''''''')
             currenttime = int(time.time())
             customer = Customer(
                 industry_id=industry_id,

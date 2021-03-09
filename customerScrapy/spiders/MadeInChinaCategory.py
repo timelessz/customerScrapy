@@ -109,6 +109,7 @@ class MadeinchinacategorySpider(scrapy.Spider):
     # 添加小分类
     def __add_category(self, href, text, type_id):
         cate = self.DBSession.query(Category).filter_by(en_name=text).first()
+
         if cate is not None:
             return cate.id
         currenttime = int(time.time())
